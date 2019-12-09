@@ -36,9 +36,9 @@ public class ContactsImp {
             if (!Files.exists(file)) {
                 Files.createFile(file);
             }
-            Files.write(file, contactList);
             List<String> lines = Files.readAllLines(file);
             while (true) {
+                Files.write(file, contactList);
                 System.out.println("1. View contacts.");
                 System.out.println("2. Add a new contact.");
                 System.out.println("3. Search contacts by name.");
@@ -92,6 +92,18 @@ public class ContactsImp {
 
                         }
 
+                    }
+                    case "4": {
+                        System.out.println("Enter contact name to delete: ");
+                        ArrayList<String> removeList = new ArrayList<>();
+                        for (String contact: contactList) {
+                            userInput = sc.nextLine();
+                            if (contact.equalsIgnoreCase(userInput)) {
+                                continue;
+                            }
+                            removeList.add(contact);
+                        }
+                        Files.write(file, removeList);
                     }
                 }
             }
