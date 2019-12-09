@@ -51,7 +51,7 @@ public class ContactsImp {
                         for (String line : lines) {
                             System.out.println(line);
                         }
-                            break;
+                        break;
                     }
                     case "2": {
                         System.out.println("Please enter contact's name: ");
@@ -68,20 +68,30 @@ public class ContactsImp {
                         break;
                     }
                     case "3": {
-                        int i = 1;
-                        while (i < contactList.size()) {
+                        int i = 0;
                         System.out.println("Enter the name of contact");
                         userInput = sc.nextLine();
-                        for (String contact : contactList) {
-                            if (contact.contains(userInput)) {
-                                System.out.println(contact);
+                        while (i <= contactList.size()) {
+//                        for (String contact : contactList) {
+                            if (contactList.get(i).contains(userInput)) {
+                                System.out.println(contactList.get(i));
                                 i = contactList.size();
                                 break;
                             } else {
                                 i++;
+                                if (i == contactList.size()) {
+                                    System.out.println("Invalid user");
+                                    System.out.println("Please try again or type \"exit\"");
+                                    userInput = sc.nextLine();
+                                    i = 0;
+                                    if (userInput.equalsIgnoreCase("exit")) {
+                                        break;
+                                    }
+                                }
                             }
+
                         }
-                        }
+
                     }
                 }
             }
@@ -90,10 +100,7 @@ public class ContactsImp {
         }
 
 
-
-
-
-        }
-
     }
+
+}
 
