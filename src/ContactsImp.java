@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ public class ContactsImp {
     public static String contactName;
     public static String contactNum;
     public static List<String> lines;
-
+    private static Object ArrayList;
 
 
     public static void main(String[] args) {
@@ -25,7 +26,12 @@ public class ContactsImp {
         String newHuman = ethan.getName() + " | " + ethan.getNumber();
         String newerHuman = jacob.getName() + " | " + jacob.getNumber();
         String header = "Name  | Phone Number \n--------------------";
-        List<String> contactList = Arrays.asList(header, newHuman, newerHuman);
+//        List<String> contactList = Arrays.asList(header, newHuman, newerHuman);
+        ArrayList<String> contactList = new ArrayList<>();
+        contactList.add(header);
+        contactList.add(newHuman);
+        contactList.add(newerHuman);
+
         try {
             if (!Files.exists(file)) {
                 Files.createFile(file);
@@ -45,6 +51,7 @@ public class ContactsImp {
                         for (String line : lines) {
                             System.out.println(line);
                         }
+                            break;
                     }
                     case "2": {
                         System.out.println("Please enter contact's name: ");
@@ -52,8 +59,29 @@ public class ContactsImp {
                         System.out.println("Please enter their phone number: ");
                         String numInput = sc.nextLine();
                         Personages person = new Personages(nameInput, numInput);
-
-
+                        String newestHuman = person.getName() + " | " + person.getNumber();
+                        System.out.println(contactList);
+                        System.out.println(newestHuman);
+                        contactList.add(newestHuman);
+                        Files.write(file, contactList);
+                        lines = Files.readAllLines(file);
+                        break;
+                    }
+                    case "3": {
+                        int i = 1;
+                        while (i < contactList.size()) {
+                        System.out.println("Enter the name of contact");
+                        userInput = sc.nextLine();
+                        for (String contact : contactList) {
+                            if (contact.contains(userInput)) {
+                                System.out.println(contact);
+                                i = contactList.size();
+                                break;
+                            } else {
+                                i++;
+                            }
+                        }
+                        }
                     }
                 }
             }
