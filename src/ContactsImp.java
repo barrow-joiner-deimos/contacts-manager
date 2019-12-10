@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,29 +17,30 @@ public class ContactsImp {
     public static String contactNum;
     public static List<String> lines;
     private static Object ArrayList;
+    static String header = "Name  | Phone Number \n--------------------";
+    static List<String> start;
+    static int newIndex;
 
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Path file = Paths.get(folder, fileName);
-        Personages ethan = new Personages("ethan", "1234567893");
-        Personages jacob = new Personages("jacob", "2344567893");
-        String newHuman = ethan.getName() + " | " + ethan.getNumber();
-        String newerHuman = jacob.getName() + " | " + jacob.getNumber();
-        String header = "Name  | Phone Number \n--------------------";
+    static Path file = Paths.get(folder, fileName);
+
+        static ArrayList<String> contactList = new ArrayList<>();
 //        List<String> contactList = Arrays.asList(header, newHuman, newerHuman);
-        ArrayList<String> contactList = new ArrayList<>();
-        contactList.add(header);
-        contactList.add(newHuman);
-        contactList.add(newerHuman);
 
+    public static void main(String[] args) throws IOException {
+        contactList.add(header);
+        start = Files.readAllLines(file);
+        Scanner sc = new Scanner(System.in);
+        if (start.size() == 0) {
+            Files.write(file, Arrays.asList(header));
+            }
         try {
             if (!Files.exists(file)) {
                 Files.createFile(file);
             }
-            Files.write(file, contactList);
+            boolean theFlag = true;
             List<String> lines = Files.readAllLines(file);
-            while (true) {
+            while (theFlag) {
                 System.out.println("1. View contacts.");
                 System.out.println("2. Add a new contact.");
                 System.out.println("3. Search contacts by name.");
@@ -48,10 +50,11 @@ public class ContactsImp {
 
                 switch (userInput) {
                     case "1": {
+                        lines = Files.readAllLines(file);
                         for (String line : lines) {
                             System.out.println(line);
                         }
-                            break;
+                        break;
                     }
                     case "2": {
                         System.out.println("Please enter contact's name: ");
@@ -60,28 +63,52 @@ public class ContactsImp {
                         String numInput = sc.nextLine();
                         Personages person = new Personages(nameInput, numInput);
                         String newestHuman = person.getName() + " | " + person.getNumber();
-                        System.out.println(contactList);
-                        System.out.println(newestHuman);
-                        contactList.add(newestHuman);
-                        Files.write(file, contactList);
+                        contactList.add(newestHuman.toLowerCase());
+                        Files.write(file, Arrays.asList(newestHuman.toLowerCase()), StandardOpenOption.APPEND);
                         lines = Files.readAllLines(file);
                         break;
                     }
                     case "3": {
-                        int i = 1;
-                        while (i < contactList.size()) {
-                        System.out.println("Enter the name of contact");
+                        System.out.println("Enter the name or number of contact");
                         userInput = sc.nextLine();
-                        for (String contact : contactList) {
-                            if (contact.contains(userInput)) {
-                                System.out.println(contact);
-                                i = contactList.size();
-                                break;
-                            } else {
+                        int i = 0;
+                        boolean newFlag = true;
+                        while (newFlag) {
+                            for (String contact : lines) {
+                                if (contact.contains(userInput.toLowerCase())) {
+                                    System.out.println(contact);
+                                    newFlag = false;
+                                    break;
+                                }
                                 i++;
+                                if (i == lines.size()) {
+                                    System.out.println("Invalid user");
+                                    System.out.println("Please try again or type \"exit\"");
+                                    userInput = sc.nextLine();
+                                    i = 0;
+                                    if (userInput.equalsIgnoreCase("exit")) {
+                                        newFlag = false;
+                                        break;
+                                    }
+                                }
                             }
+                        } break;
+                    }
+                    case "4": {
+                        System.out.println("Enter contact name to delete: ");
+                        ArrayList<String> removeList = new ArrayList<>();
+                        userInput = sc.nextLine();
+                        for (String contact: lines) {
+                            if (contact.contains(userInput)) {
+                                continue;
+                            }
+                            removeList.add(contact);
                         }
-                        }
+                        Files.write(file, removeList);
+                        break;
+                    }
+                    case "5": {
+                        theFlag = false;
                     }
                 }
             }
@@ -90,10 +117,7 @@ public class ContactsImp {
         }
 
 
-
-
-
-        }
-
     }
+
+}
 

@@ -1,4 +1,4 @@
 Name  | Phone Number 
 --------------------
-ethan | 1234567893
-jacob | 2344567893
+duck | 114
+gooooooo | 234
